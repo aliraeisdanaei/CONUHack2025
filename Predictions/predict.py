@@ -44,7 +44,7 @@ def mark_fire_occurrence(fire_row):
 fire_data.apply(mark_fire_occurrence, axis=1)
 
 num_fires = (env_data['fire_occurrence'] == 1).sum()
-num_non_fires = int(2 * num_fires)
+num_non_fires = int(1 * num_fires)
 print('Num of fire occurrences:', num_fires)
 print('Num of no fire occurences kept:', num_non_fires)
 
@@ -74,7 +74,7 @@ for _ in range(num_runs):
 
     # print(X)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
     classifier = SVC(kernel='rbf')
 
