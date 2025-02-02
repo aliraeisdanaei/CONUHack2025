@@ -1,11 +1,11 @@
-from flask import Blueprint, request, Response, jsonify
+# from flask import Blueprint, request, Response, jsonify
 from typing import List, Tuple
 from datetime import datetime
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 # Create a Blueprint instance
-fireReport = Blueprint('fireReport', __name__)
+# fireReport = Blueprint('fireReport', __name__)
 
 RESOURCE_SPECS = {
     "Smoke Jumpers": {"deployment_minutes": 30, "operational_cost": 5000, "count": 5},
@@ -186,39 +186,111 @@ def process_data(wildfire_data: list[dict]) -> None:
     sort_data(wildfire_data)
 
 
-@fireReport.route('/api/makeFireReport', methods=['POST'])
-def post_data() -> Response:
+# @fireReport.route('/api/makeFireReport', methods=['POST'])
+# def post_data() -> Response:
+#     """
+#     GET Endpoint that 
+#         - processes the csv data of the wildfire report
+#         - Generates a report and an incident logo
+#         - Returns the result as a JSON Object
+
+#     Returns:
+#         Response an object containing status, report, logs, and message
+#     """
+#     try:
+#         # Get JSON data from request
+#         data = request.get_json()
+        
+#         if not data:
+#             return jsonify({
+#                 "status": "error",
+#                 "message": "No JSON data received"
+#             }), 400
+        
+#         process_data(data)
+#         report, logs = simulate_deployment(data)
+        
+#         return jsonify({
+#             "status": "success",
+#             "report": report, 
+#             "logs": logs,
+#             "message": "Data processed successfully"
+#         })
+        
+#     except Exception as e:
+#         return jsonify({
+#             "status": "error",
+#             "message": str(e)
+#         }), 500
+
+import csv
+DATA_FILENAME = "./current_wildfiredata.csv"
+
+
+def print_incident_report(incident_logs: list[dict]) -> None:
+    """Prints incident report in a structured format.
+
+    Arguments:
+        incident_logs -- the incident log to print
     """
-    GET Endpoint that 
-        - processes the csv data of the wildfire report
-        - Generates a report and an incident logo
-        - Returns the result as a JSON Object
+    print("\n----- Detailed Incident Report -----")
+    for log in incident_logs:
+        event_info = (
+            f"Event {log['event_index']} | Time: {log['timestamp']} | "
+            f"Severity: {log['severity'].capitalize()} | Location: {log['location']}"
+        )
+
+        if log["action"].startswith("Assigned"):
+            unit_info = (
+                f"--> Assigned Unit: {log['resource']} "
+                f"(Cost: ${log['operational_cost']})"
+            )
+        else:
+            unit_info = f"--> {log['action']}"
+        print(f"{event_info} {unit_info}")
+
+
+def print_summary_report(report: list[dict]) -> None:
+    """ Prints the wildfire response summary report in a structured format.
+
+    Arguments:
+        report -- A dictionary containing fire response data.
+    """
+    print("----- Wildfire Response Report -----")
+    print("Fires Addressed:")
+    for severity, count in report["fires_addressed"].items():
+        print(f"  {severity.capitalize()}: {count}")
+
+    print("\nFires Delayed:")
+    for severity, count in report["fires_delayed"].items():
+        print(f"  {severity.capitalize()}: {count}")
+
+    print(f"\nTotal Operational Costs: ${report['operational_costs']:,.2f}")
+    print("Estimated Damage Costs from Delayed" \
+        f"Responses: ${report['estimated_damage_costs']:,.2f}")
+
+def read_csv(csv_filename: str) -> list[dict]:
+    """Reads the csv file and returns a data as a list of dict
+
+    Arguments:
+        csv_filename -- the filepath to the csv file
 
     Returns:
-        Response an object containing status, report, logs, and message
+        the wildfire data
     """
-    try:
-        # Get JSON data from request
-        data = request.get_json()
-        
-        if not data:
-            return jsonify({
-                "status": "error",
-                "message": "No JSON data received"
-            }), 400
-        
-        process_data(data)
-        report, logs = simulate_deployment(data)
-        
-        return jsonify({
-            "status": "success",
-            "report": report, 
-            "logs": logs,
-            "message": "Data processed successfully"
-        })
-        
-    except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
+    with open(csv_filename, mode='r', newline='', encoding='utf-8') as csvfile:
+        csvreader = csv.DictReader(csvfile)
+        data = [row for row in csvreader]
+    return data
+
+if __name__ == "__main__":
+    # try:
+    wildfire_json = read_csv(DATA_FILENAME)
+    # except Exception as e:
+    #     print("Error reading the CSV file:", e)
+    #     exit(1)
+
+    report, incident_logs = simulate_deployment(wildfire_json, RESOURCE_POOL)
+
+    print_summary_report(report)
+    # print_incident_report(incident_logs)
