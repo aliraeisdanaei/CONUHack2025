@@ -2,3 +2,4 @@ Data
 .venv
 .env
 */.DS_Store
+__pycache__
