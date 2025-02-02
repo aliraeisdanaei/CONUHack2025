@@ -1,8 +1,10 @@
 # fastapi
 # uvicorn
-# pandas
+pandas
 # python-multipart
 flask==3.0.2
 flask-cors==4.0.0
 python-dotenv==1.0.1
 gunicorn
+joblib
+sklearn
