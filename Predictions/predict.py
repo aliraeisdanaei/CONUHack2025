@@ -25,14 +25,26 @@ fire_data = fire_data[fire_data['severity'].isin(['medium', 'high'])]
 time_threshold = timedelta(hours=3)
 distance_threshold = 0.3  # degrees
 
-def mark_fire_occurrence(fire_row):
-    fire_time = fire_row['fire_start_time']
-    fire_lat = fire_row['latitude']
-    fire_lon = fire_row['longitude']
+def mark_fire_occurrence(fire_row: pd.Series) -> None:
+    """
+    Marks fire occurrences in the environmental dataset based on spatial and temporal proximity.
+
+    Arguments:
+        fire_row (pd.Series): A row containing fire event data, including 'fire_start_time', 'latitude', and 'longitude'.
+
+    Modifies:
+        env_data (pd.DataFrame): Updates the 'fire_occurrence' column for entries within the time and distance thresholds.
+    """
+    fire_time: float = fire_row['fire_start_time']
+    fire_lat: float = fire_row['latitude']
+    fire_lon: float = fire_row['longitude']
+    
     mask_time = (env_data['timestamp'] >= (fire_time - time_threshold)) & (env_data['timestamp'] <= (fire_time + time_threshold))
     subset = env_data[mask_time]
+    
     mask_space = (np.abs(subset['latitude'] - fire_lat) < distance_threshold) & (np.abs(subset['longitude'] - fire_lon) < distance_threshold)
     indices = subset[mask_space].index
+    
     env_data.loc[indices, 'fire_occurrence'] = 1
 
 fire_data.apply(mark_fire_occurrence, axis=1)

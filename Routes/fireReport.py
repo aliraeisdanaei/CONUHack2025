@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, Response, jsonify
 from typing import List, Tuple
 from datetime import datetime
 
@@ -62,18 +62,6 @@ def select_resource(resource_pool: list[dict], severity: str) -> dict:
         resource_pool.sort(key=lambda r: (
             r["operational_cost"], r["deployment_minutes"]))
         return resource_pool[0]
-
-
-def sort_data(wildfire_data: list[dict]) -> None:
-    """Sorts wildfire data in places by report time; if same time,
-        then high severity events first
-
-    Arguments:
-        wildfire_data -- the list of wildfire events
-    """
-    severity_order = {"high": 1, "medium": 2, "low": 3}
-    wildfire_data.sort(key=lambda x: (
-        x["timestamp"], severity_order[x["severity"]]))
 
 
 def simulate_deployment(
@@ -165,14 +153,31 @@ def simulate_deployment(
 
     return report, incident_logs
 
-
-def process_data(wildfire_data: list[dict]) -> None:
-    """Processes the wildfire data in place
-    converts all the date fields (timestamp, fire_start_time) in format of DATE_FORMAT to datetime
-    sorts the data by the dates
+def sort_data(wildfire_data: list[dict]) -> None:
+    """Sorts wildfire data in places by report time; if same time,
+        then high severity events first
 
     Arguments:
         wildfire_data -- the list of wildfire events
+
+    Modifies:
+        wildfire_data -- then sorts the data by the dates
+    """
+    severity_order = {"high": 1, "medium": 2, "low": 3}
+    wildfire_data.sort(key=lambda x: (
+        x["timestamp"], severity_order[x["severity"]]))
+
+
+
+def process_data(wildfire_data: list[dict]) -> None:
+    """Processes the wildfire data in place
+
+    Arguments:
+        wildfire_data -- the list of wildfire events
+    
+    Modifies:
+        wildfire_data -- converts all the date fields (timestamp, fire_start_time) in format of DATE_FORMAT to datetime
+            then sorts the data by the dates
     """
     for event in wildfire_data:
         event['timestamp'] = datetime.strptime(event['timestamp'], DATE_FORMAT)
@@ -182,7 +187,16 @@ def process_data(wildfire_data: list[dict]) -> None:
 
 
 @fireReport.route('/api/makeFireReport', methods=['POST'])
-def post_data():
+def post_data() -> Response:
+    """
+    GET Endpoint that 
+        - processes the csv data of the wildfire report
+        - Generates a report and an incident logo
+        - Returns the result as a JSON Object
+
+    Returns:
+        Response an object containing status, report, logs, and message
+    """
     try:
         # Get JSON data from request
         data = request.get_json()
@@ -193,7 +207,6 @@ def post_data():
                 "message": "No JSON data received"
             }), 400
         
-        print(data)
         process_data(data)
         report, logs = simulate_deployment(data)
         

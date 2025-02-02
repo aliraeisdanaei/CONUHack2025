@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, Response, jsonify
 import pandas as pd
 from joblib import load
 
@@ -6,14 +6,14 @@ from joblib import load
 firePrediction = Blueprint('firePrediction', __name__)
 
 def get_fire_severity(prob: float) -> str:
-    """
-    Map the predicted fire probability to a severity level.
-    
-    Parameters:
-        prob (float): The predicted fire probability.
-        
+    """Map the predicted fire probability to a severity level.
+
+
+    Arguments:
+        prob -- The predicted fire probability.
+
     Returns:
-        str: Severity level based on the probability thresholds.
+        Severity level based on the probability thresholds.
     """
     if prob >= 0.9:
         return "medium"
@@ -23,7 +23,7 @@ def get_fire_severity(prob: float) -> str:
         return "low"
 
 @firePrediction.route('/api/getFirePrediction', methods=['GET'])
-def predict_fire():
+def predict_fire() -> Response:
     """
     GET endpoint that:
       - Loads the pre-trained model.
@@ -32,7 +32,7 @@ def predict_fire():
       - Returns the results as a JSON response along with model information.
     
     Returns:
-        JSON: An object containing the status, fire predictions list, and model info.
+        Response an object containing the status, fire predictions list, and model info.
     """
     try:
         # Load the saved model pipeline from the model folder.
