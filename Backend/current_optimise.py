@@ -188,9 +188,10 @@ def process_data(wildfire_data: list[dict]) -> None:
     Arguments:
         wildfire_data -- the list of wildfire events
     """
-    event['timestamp'] = datetime.strptime(event['timestamp'], DATE_FORMAT)
-    event['fire_start_time'] = datetime.strptime(
-        event['fire_start_time'], DATE_FORMAT)
+    for event in wildfire_data:
+        event['timestamp'] = datetime.strptime(event['timestamp'], DATE_FORMAT)
+        event['fire_start_time'] = datetime.strptime(
+            event['fire_start_time'], DATE_FORMAT)
     sort_data(wildfire_data)
 
 
