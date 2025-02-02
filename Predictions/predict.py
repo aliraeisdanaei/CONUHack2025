@@ -21,6 +21,9 @@ env_data['month'] = env_data['timestamp'].dt.month
 # 3. Label the data: initialize with 0 and then mark observations that are near a fire event as 1.
 env_data['fire_occurrence'] = 0
 
+# Filter rows where 'severity' is 'medium' or 'high'
+fire_data = fire_data[fire_data['severity'].isin(['medium', 'high'])]
+
 # We use a ±3-hour time window and a simple spatial threshold (0.5°) to mark an observation.
 time_threshold = timedelta(hours=3)
 distance_threshold = 0.5  # degrees (roughly 50 km; adjust as needed)
@@ -41,34 +44,36 @@ def mark_fire_occurrence(fire_row):
 fire_data.apply(mark_fire_occurrence, axis=1)
 
 num_fires = (env_data['fire_occurrence'] == 1).sum()
-num_non_fires = 3 * num_fires
+num_non_fires = int(2 * num_fires)
 print('Num of fire occurrences:', num_fires)
 print('Num of no fire occurences kept:', num_non_fires)
 
-# Filter rows where 'fire_occurrences' is 1 and 0
-fire_occurrences_one = env_data[env_data['fire_occurrence'] == 1]
-fire_occurrences_zero = env_data[env_data['fire_occurrence'] == 0]
-
-# Randomly sample num_non_fires rows from those where 'fire_occurrences' is 0
-sampled_rows = fire_occurrences_zero.sample(n=num_non_fires, random_state=42)
-
-# Append the sampled rows to the rows where 'fire_occurrences' is 1
-env_data = pd.concat([fire_occurrences_one, sampled_rows])
-
-# Shuffle the combined data (if you want random order)
-env_data = env_data.sample(frac=1).reset_index(drop=True)
-
-# print(env_data)
-
-X = env_data.drop(columns=['fire_occurrence', 'latitude', 'longitude', 'timestamp'])
-y = env_data['fire_occurrence']
-
-print(X)
 
 num_runs = 5
 total_accurracy = 0
 total_f1 = 0
 for _ in range(num_runs):
+
+    # Filter rows where 'fire_occurrences' is 1 and 0
+    fire_occurrences_one = env_data[env_data['fire_occurrence'] == 1]
+    fire_occurrences_zero = env_data[env_data['fire_occurrence'] == 0]
+
+    # Randomly sample num_non_fires rows from those where 'fire_occurrences' is 0
+    sampled_rows = fire_occurrences_zero.sample(n=num_non_fires, random_state=42)
+
+    # Append the sampled rows to the rows where 'fire_occurrences' is 1
+    env_data = pd.concat([fire_occurrences_one, sampled_rows])
+
+    # Shuffle the combined data (if you want random order)
+    env_data = env_data.sample(frac=1).reset_index(drop=True)
+
+    # print(env_data)
+
+    X = env_data.drop(columns=['fire_occurrence', 'latitude', 'longitude', 'timestamp'])
+    y = env_data['fire_occurrence']
+
+    # print(X)
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
 
     classifier = SVC(kernel='rbf')
@@ -80,9 +85,9 @@ for _ in range(num_runs):
     conf_matrix = confusion_matrix(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
 
-    print("Accuracy:", accuracy)
-    print("Confusion Matrix:\n", conf_matrix)
-    print(f"F1-score: {f1}")
+    # print("Accuracy:", accuracy)
+    # print("Confusion Matrix:\n", conf_matrix)
+    # print(f"F1-score: {f1}")
 
     total_accurracy += accuracy
     total_f1 += f1
