@@ -1,16 +1,9 @@
-from current_optimise import process_data, simulate_deployment
+from flask import Blueprint, request, jsonify
 
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+# Create a Blueprint instance
+fireReport = Blueprint('fireReport', __name__)
 
-app = Flask(__name__)
-CORS(app)
-
-
-# Store data temporarily (in a real application, you'd use a database)
-data_store = {}
-
-@app.route('/api/makeFireReport', methods=['POST'])
+@fireReport.route('/api/makeFireReport', methods=['POST'])
 def post_data():
     try:
         # Get JSON data from request
@@ -37,6 +30,3 @@ def post_data():
             "status": "error",
             "message": str(e)
         }), 500
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
