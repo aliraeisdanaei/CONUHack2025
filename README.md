@@ -58,6 +58,17 @@ project_root/
     Running the Application
 
 ## Start the Flask server by executing:
+3. **Install Dependencies:**
 
-  ```bash
-        pip install -r requirements.txt
+   ```bash
+    python main.py
+
+By default, the server runs on port 5000. You can change the port by setting the PORT environment variable.
+
+## API Endpoints
+
+//TODO: - fill this
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request. For significant changes, open an issue first to discuss your ideas.
