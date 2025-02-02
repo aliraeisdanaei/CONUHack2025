@@ -1,13 +1,4 @@
-from current_optimise import DATA_FILENAME, read_csv
 from current_optimise import process_data, simulate_deployment
-
-
-data = read_csv(DATA_FILENAME)
-process_data(data)
-
-report, logs = simulate_deployment(data)
-
-
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
