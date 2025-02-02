@@ -62,7 +62,7 @@ def predict_fire() -> Response:
                 "fire_severity": get_fire_severity(fire_probabilities[i])
             })
         
-        # Model performance information (could be dynamically calculated or hard-coded)
+        # Results are based on our training
         model_info = {
             "average_accuracy": 0.8911764705882353,
             "average_f1_score": 0.8815359237536656,
