@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from current_optimise import process_data, simulate_deployment
 
 # Create a Blueprint instance
 fireReport = Blueprint('fireReport', __name__)

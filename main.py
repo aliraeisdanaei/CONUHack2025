@@ -1,6 +1,5 @@
 import os
 
-from current_optimise import process_data, simulate_deployment
 from Routes.fireReport import fireReport  # Import the Blueprint, not the function
 
 from flask import Flask
