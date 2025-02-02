@@ -12,9 +12,6 @@ app.register_blueprint(fireReport)
 
 CORS(app)
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
-
 if name == 'main':
     # Use Render's PORT environment variable or default to 5000
     port = int(os.environ.get("PORT", 5000))
