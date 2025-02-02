@@ -8,7 +8,6 @@ There are two main functions for our IOS app:
  1. Managing fire fightings units to minimize damages and operational costs according to given wildfire data.
  This data can be given as a CSV file or as a link on our app. 
  2. To predict future wildfire data according to our AI model trained on historical environmental and wildfire data. 
- The data can be given as a CSV file or as a link on our app. 
 
 
 ## How we built it
