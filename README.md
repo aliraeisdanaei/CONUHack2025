@@ -1,6 +1,5 @@
-# CONUHack2025
+# CONUHack2025 Backend
 # Piaz Dari Khoone
-Our Team's Repository for ConUHack 2025
 
 # Wildfire Response and Prediction Backend
 
