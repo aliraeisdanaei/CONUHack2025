@@ -233,9 +233,8 @@ def print_summary_report(report: list[dict]) -> None:
         print(f"  {severity.capitalize()}: {count}")
 
     print(f"\nTotal Operational Costs: ${report['operational_costs']:,.2f}")
-    print(
-        f"Estimated Damage Costs from Delayed Responses: ${
-            report['estimated_damage_costs']:,.2f}")
+    print("Estimated Damage Costs from Delayed" \
+        f"Responses: ${report['estimated_damage_costs']:,.2f}")
 
 
 if __name__ == "__main__":
