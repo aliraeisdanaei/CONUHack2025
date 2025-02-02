@@ -76,7 +76,7 @@ def sort_data(wildfire_data: list[dict]) -> None:
 
 
 def simulate_deployment(
-        wildfire_data: list[dict], resource_pool: list[dict]) -> Tuple[list[dict], list[dict]]:
+        wildfire_data: list[dict], resource_pool=RESOURCE_POOL) -> Tuple[list[dict], list[dict]]:
     """Simulates the deployment of wilfire events
     each resource is used only once
 
@@ -101,7 +101,7 @@ def simulate_deployment(
 
     # Policy: keep track of how many low severity events have been
     # intentionally missed.
-    allowed_low_misses = max(0, len(wildfire_data) - len(RESOURCE_POOL))
+    allowed_low_misses = max(0, len(wildfire_data) - len(resource_pool))
     low_missed_count = 0
 
     # List to log each incident
