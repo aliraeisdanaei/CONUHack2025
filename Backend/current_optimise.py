@@ -3,7 +3,7 @@ from datetime import datetime
 
 from typing import List, Tuple
 
-DATA_FILENAME = "Data/current_wildfiredata.csv"
+DATA_FILENAME = "../Data/current_wildfiredata.csv"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 RESOURCE_SPECS = {
