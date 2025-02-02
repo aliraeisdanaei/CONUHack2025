@@ -18,11 +18,12 @@ def post_data():
         
         print(data)
         process_data(data)
-        simulate_deployment(data)
+        report, logs = simulate_deployment(data)
         
         return jsonify({
             "status": "success",
-            "data": data,
+            "report": report, 
+            "logs": logs,
             "message": "Data processed successfully"
         })
         
