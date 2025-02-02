@@ -203,15 +203,15 @@ def print_incident_report(incident_logs: list[dict]) -> None:
     print("\n----- Detailed Incident Report -----")
     for log in incident_logs:
         event_info = (
-            f"Event {
-                log['event_index']} | Time: {
-                log['timestamp']} | " f"Severity: {
-                log['severity'].capitalize()} | Location: {
-                    log['location']}")
+            f"Event {log['event_index']} | Time: {log['timestamp']} | "
+            f"Severity: {log['severity'].capitalize()} | Location: {log['location']}"
+        )
+
         if log["action"].startswith("Assigned"):
-            unit_info = f"--> Assigned Unit: {
-                log['resource']} (Cost: ${
-                log['operational_cost']})"
+            unit_info = (
+                f"--> Assigned Unit: {log['resource']} "
+                f"(Cost: ${log['operational_cost']})"
+            )
         else:
             unit_info = f"--> {log['action']}"
         print(f"{event_info} {unit_info}")
