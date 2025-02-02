@@ -67,7 +67,55 @@ By default, the server runs on port 5000. You can change the port by setting the
 
 ## API Endpoints
 
-//TODO: - fill this
+### 1. Get Fire Prediction
+**Endpoint:** `GET /api/getFirePrediction`
+
+**Description:**
+This endpoint loads a pre-trained model, processes environmental data, and generates fire predictions. It returns a JSON response containing prediction results and model information.
+
+**Response Format:**
+```json
+{
+    "status": "success",
+    "predictions": [
+        { "timestamp": "YYYY-MM-DD HH:MM:SS", "latitude": XX.XXXX, "longitude": YY.YYYY, "fire_prob": Z.ZZZZ, "fire_severity": "High/Medium/Low" }
+    ],
+    "model_info": {
+        "average_accuracy": 0.8912,
+        "average_f1_score": 0.8815,
+        "number_of_iterations": 10
+    }
+}
+```
+
+---
+
+### 2. Submit Fire Report
+**Endpoint:** `POST /api/makeFireReport`
+
+**Description:**
+This endpoint processes wildfire report data, generates a report and an incident log, and returns the result as a JSON object.
+
+**Request Format:**
+```json
+{
+    "location": "X",
+    "description": "Fire observed near forest area",
+    "severity": "High",
+    "reporter": "John Doe"
+}
+```
+
+**Response Format:**
+```json
+{
+    "status": "success",
+    "report": "Generated Report Data",
+    "logs": "Incident Log Details",
+    "message": "Data processed successfully."
+}
+```
+
 
 ## Contributing
 
