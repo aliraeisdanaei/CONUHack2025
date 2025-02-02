@@ -1,6 +1,9 @@
 # CONUHack2025 Backend
 # Piaz Dari Khoone
 
+ * [App](https://github.com/alireza12t/ConUHack2025-Quebec-Firefighters-iOS-App)
+ * [DevPost](https://devpost.com/software/quebec-firefighters?ref_content=user-portfolio&ref_feature=in_progress)
+
 # Wildfire Response and Prediction Backend
 
 This backend application is built with Flask and serves two main functions:  
